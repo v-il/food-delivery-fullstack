@@ -1,0 +1,52 @@
+version: '1.0'
+
+services: 
+  backend: 
+    image: "node:lts"
+    restart: unless-stopped
+    user: 1000:1000
+    working_dir: /home/app/backend
+    ports: 
+      - "5000:5000"
+    volumes:
+      - ./backend:/home/app/backend
+    command: "npm run start:dev"
+  frontend: 
+    image: "node:lts"
+    restart: unless-stopped
+    user: 1000:1000
+    working_dir: /home/app/frontend
+    ports: 
+      - "3000:3000"
+    volumes:
+      - ./frontend:/home/app/frontend
+    command: "npm run dev"
+  python:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    image: "python:3.9-slim-buster"
+    restart: unless-stopped
+    working_dir: /home/app/python
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./python:/home/app/python
+    command: "python main.py"
+  db: 
+    image: postgres:15.1
+    restart: unless-stopped
+    user: 1000:1000
+    volumes: 
+      - "./data/db:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "food"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - default
