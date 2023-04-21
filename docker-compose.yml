@@ -1,22 +1,22 @@
 version: '1.0'
 
-services: 
-  backend: 
+services:
+  backend:
     image: "node:lts"
     restart: unless-stopped
     user: 1000:1000
     working_dir: /home/app/backend
-    ports: 
+    ports:
       - "5000:5000"
     volumes:
       - ./backend:/home/app/backend
     command: "npm run start:dev"
-  frontend: 
+  frontend:
     image: "node:lts"
     restart: unless-stopped
     user: 1000:1000
     working_dir: /home/app/frontend
-    ports: 
+    ports:
       - "3000:3000"
     volumes:
       - ./frontend:/home/app/frontend
@@ -33,11 +33,13 @@ services:
     volumes:
       - ./python:/home/app/python
     command: "python3 main.py"
-  db: 
+    depends_on:
+      - backend
+  db:
     image: postgres:15.1
     restart: unless-stopped
     user: 1000:1000
-    volumes: 
+    volumes:
       - "./data/db:/var/lib/postgresql/data"
     environment:
       POSTGRES_USER: "root"
