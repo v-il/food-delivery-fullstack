@@ -5,6 +5,8 @@ import { PromobannersModule } from './promobanners/promobanners.module';
 import { Promobanner } from './promobanners/promobanners.model';
 import { PromocodesModule } from './promocodes/promocodes.module';
 import { Promocode } from './promocodes/promocodes.model';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/categories.model';
 
 @Module({
   imports: [
@@ -18,11 +20,12 @@ import { Promocode } from './promocodes/promocodes.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [Promobanner, Promocode],
+      models: [Promobanner, Promocode, Category],
       autoLoadModels: true,
     }),
     PromobannersModule,
     PromocodesModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [],

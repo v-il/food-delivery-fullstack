@@ -31,15 +31,27 @@ export class PromocodesService {
     }
 
     async delete(id: number) {
-        const promocode = await this.promocodeRepository.findOne({where: {
-            id
-        }});
+        const promocode = await this.promocodeRepository.findOne({
+            where: {
+                id
+            }
+        });
 
         if (!promocode) {
             throw new NotFoundException();
         }
 
         await promocode.destroy();
+        return true;
+    }
+
+    async checkTheCode(code: string) {
+        const promocode = await this.promocodeRepository.findOne({ where: { code } });
+
+        if (!promocode) {
+            throw new NotFoundException();
+        }
+
         return true;
     }
 }
