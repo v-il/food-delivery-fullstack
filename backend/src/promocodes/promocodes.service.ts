@@ -23,11 +23,12 @@ export class PromocodesService {
                 id
             }
         });
-        if (promocode) {
-            return promocode;
+
+        if (!promocode) {
+            throw new NotFoundException();
         }
 
-        throw new NotFoundException();
+        return promocode;
     }
 
     async delete(id: number) {
@@ -51,7 +52,7 @@ export class PromocodesService {
         if (!promocode) {
             throw new NotFoundException();
         }
-
+        
         return true;
     }
 }

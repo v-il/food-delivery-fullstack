@@ -15,14 +15,14 @@ export class PromocodesController {
     @ApiBadRequestResponse({ status: 400, description: 'Не была получена ссылка на изображение' })
     @Post()
     create(@Body() dto: CreatePromocodeDto) {
-        this.promocodeService.create(dto);
+        return this.promocodeService.create(dto);
     }
 
     @ApiOperation({ summary: 'Получение всех промокодов' })
     @ApiResponse({ status: 200, type: [Promocode] })
     @Get()
     getAll() {
-        this.promocodeService.getAll();
+        return this.promocodeService.getAll();
     }
 
     @ApiOperation({ summary: 'Получение промокода по id' })
@@ -30,14 +30,14 @@ export class PromocodesController {
     @ApiNotFoundResponse({ status: 404, description: 'Не найден' })
     @Get("/:id")
     getOne(@Param("id") id: number) {
-        this.promocodeService.getOne(id);
+        return this.promocodeService.getOne(id);
     }
 
     @ApiTags('Telegram')
     @ApiOperation({ summary: 'Проверка валидности промокода' })
     @ApiResponse({ status: 200, type: Boolean })
     @ApiNotFoundResponse({ status: 404, description: 'Не найден' })
-    @Get('/:code')
+    @Get('/verify/:code')
     checkTheCode(@Param('code') code: string) {
         return this.promocodeService.checkTheCode(code);
     }
@@ -47,7 +47,7 @@ export class PromocodesController {
     @ApiNotFoundResponse({ status: 404, description: 'Не найден' })
     @Delete()
     delete(@Body() dto: DeletePromocodeDto) {
-        this.promocodeService.delete(dto.id);
+        return this.promocodeService.delete(dto.id);
     }
 
 }
