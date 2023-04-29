@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Category } from './categories.model';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { Item } from 'src/items/items.model';
 
 @Injectable()
 export class CategoriesService {
@@ -38,5 +39,13 @@ export class CategoriesService {
     async getOne(id: number) {
         const category = await this.categoryRepository.findOne({ where: { id } });
         return category;
+    }
+
+    async getItemsOfCategory(name: string) {
+        const items = await this.categoryRepository.findOne({where: {
+            name
+        }, include: Item})
+
+        return items;
     }
 }
