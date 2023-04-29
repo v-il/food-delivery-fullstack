@@ -7,6 +7,8 @@ import { PromocodesModule } from './promocodes/promocodes.module';
 import { Promocode } from './promocodes/promocodes.model';
 import { CategoriesModule } from './categories/categories.module';
 import { Category } from './categories/categories.model';
+import { RolesModule } from './roles/roles.module';
+import { Role } from './roles/roles.model';
 
 @Module({
   imports: [
@@ -20,12 +22,13 @@ import { Category } from './categories/categories.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [Promobanner, Promocode, Category],
+      models: [Promobanner, Promocode, Category, Role],
       autoLoadModels: true,
     }),
     PromobannersModule,
     PromocodesModule,
     CategoriesModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],

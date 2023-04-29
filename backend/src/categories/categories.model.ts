@@ -21,5 +21,5 @@ export class Category extends Model<Category, CategoryCreationAttributes> {
         type: DataType.STRING,
         allowNull: false
     })
-    code: string;
+    name: string;
 }
