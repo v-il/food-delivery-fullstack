@@ -10,16 +10,14 @@ export class CartsController {
     constructor(private cartService: CartsService) { };
 
 
-    @ApiTags('Telegram')
-    @ApiOperation({ summary: 'Создание корзины' })
+    @ApiOperation({ summary: 'Telegram | Создание корзины' })
     @ApiResponse({ status: 200, type: Cart })
     @Post()
     create() {
         return this.cartService.create();
     }
 
-    @ApiTags('Telegram')
-    @ApiOperation({ summary: 'Получение корзины' })
+    @ApiOperation({ summary: 'Telegram | Получение корзины' })
     @ApiResponse({ status: 200, type: Cart })
     @ApiNotFoundResponse({ description: 'Корзина не найдена' })
     @Get('/:string_id')

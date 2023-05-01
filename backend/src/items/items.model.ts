@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
+import { CartItem } from "src/cart-items/cart-items.model";
 import { Category } from "src/categories/categories.model";
 
 interface ItemCreationAttributes {
@@ -119,4 +120,7 @@ export class Item extends Model<Item, ItemCreationAttributes> {
         allowNull: false
     })
     category_id: number;
+
+    @HasMany(() => CartItem)
+    cartItem: CartItem[]
 }

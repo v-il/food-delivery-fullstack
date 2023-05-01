@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { CartItem } from "src/cart-items/cart-items.model";
+import { Item } from "src/items/items.model";
 
 interface CartCreationAttributes {
     string_id: string;
@@ -29,4 +31,7 @@ export class Cart extends Model<Cart, CartCreationAttributes> {
         defaultValue: false
     })
     done: boolean;
+
+    @BelongsToMany(() => Item, () => CartItem)
+    items: CartItem[]
 }

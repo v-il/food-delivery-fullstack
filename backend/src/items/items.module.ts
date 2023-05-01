@@ -7,8 +7,7 @@ import { Item } from './items.model';
 @Module({
   controllers: [ItemsController],
   providers: [ItemsService],
-  imports: [
-    SequelizeModule.forFeature([Item])
-  ]
+  imports: [SequelizeModule.forFeature([Item])],
+  exports: [ItemsService],
 })
 export class ItemsModule {}

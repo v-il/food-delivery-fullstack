@@ -55,4 +55,10 @@ export class ItemsService {
 
         return true;
     }
+
+    async getOne(item_id: number) {
+        const item = await this.itemRepository.findOne({where: {id: item_id}});
+
+        return item;
+    }
 }
