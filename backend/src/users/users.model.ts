@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { CartItem } from "src/cart-items/cart-items.model";
 import { Item } from "src/items/items.model";
+import { Order } from "src/orders/orders.model";
 
 interface UserCreationAttributes {
     tg_name: string;
@@ -60,6 +61,8 @@ export class User extends Model<User, UserCreationAttributes> {
     })
     birthday: string;
 
+    @HasMany(() => Order)
+    orders: Order[];
     
 
 
