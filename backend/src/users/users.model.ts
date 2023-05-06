@@ -5,6 +5,7 @@ import { Item } from "src/items/items.model";
 import { Order } from "src/orders/orders.model";
 
 interface UserCreationAttributes {
+    tg_id: number;
     tg_name: string;
     rl_name: string;
     address: string;
@@ -22,6 +23,15 @@ export class User extends Model<User, UserCreationAttributes> {
         primaryKey: true
     })
     id: number;
+
+    @ApiProperty({ example: 1234567890, description: 'Telegram uID' })
+    @Column({
+        type: DataType.BIGINT,
+        unique: true,
+
+    })
+    tg_id: number;
+
 
     @ApiProperty({ example: 'example', description: 'Telegram username' })
     @Column({

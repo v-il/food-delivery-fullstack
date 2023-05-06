@@ -9,7 +9,7 @@ export class UserService {
 
   async auth(dto: CreateUserDto) {
     const user = await this.userRepository.findOne({where: {
-        tg_name: dto.tg_name
+        tg_id: dto.tg_id
     }});
     if (!user) {
         return this.create(dto);

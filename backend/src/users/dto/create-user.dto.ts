@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  @ApiProperty({example: 1234567890})
+  readonly tg_id: number;
   @ApiProperty({example: 'example'})
   readonly tg_name: string;
   @ApiProperty({example: 'Иван'})
@@ -9,6 +11,6 @@ export class CreateUserDto {
   readonly address: string;
   @ApiProperty({example: '+71231234567'})
   readonly phone: string;
-  @ApiProperty({example: '01-01-1970'})
+  @ApiProperty({example: '1970-01-01'})
   readonly birthday: string;
 }
