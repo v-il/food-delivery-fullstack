@@ -26,6 +26,7 @@
     "@nestjs/sequelize": "^9.0.2",
     "@nestjs/swagger": "^6.3.0",
     "pg": "^8.10.0",
+    "randomstring": "^1.2.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
     "sequelize-typescript": "^2.1.5"

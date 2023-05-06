@@ -33,8 +33,7 @@ export class PromocodesController {
         return this.promocodeService.getOne(id);
     }
 
-    @ApiTags('Telegram')
-    @ApiOperation({ summary: 'Проверка валидности промокода' })
+    @ApiOperation({ summary: 'Telegram | Проверка валидности промокода' })
     @ApiResponse({ status: 200, type: Boolean })
     @ApiNotFoundResponse({ status: 404, description: 'Не найден' })
     @Get('/verify/:code')
