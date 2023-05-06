@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './users.model';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -22,4 +23,9 @@ export class UserService {
     const user = await this.userRepository.create(dto);
     return user;
   }
-}
+
+  async update(dto: UpdateUserDto) {
+    const user = (await this.userRepository.findOne({where: {tg_id: dto.tg_id}})).update(dto);
+    return user;
+  }
+} 

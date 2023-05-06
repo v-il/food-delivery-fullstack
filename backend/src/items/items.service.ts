@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Item } from './items.model';
+import { ItemsExtrafields } from './items-extrafields.model';
 
 @Injectable()
 export class ItemsService {
@@ -20,12 +21,6 @@ export class ItemsService {
                 description: 'Цыпленок, моцарелла, сыры чеддер и пармезан, сырный соус, томаты, фирменный соус альфредо, чеснок',
                 image_url: 'https://dodopizza-a.akamaihd.net/static/Img/Products/42360a7dcb7640c998b723231586fe84_292x292.webp',
                 different_sizes: true,
-                small_size_in_stock: true,
-                medium_size_in_stock: true,
-                big_size_in_stock: true,
-                small_size_price: 499,
-                medium_size_price: 749,
-                big_size_price: 879,
                 price: null,
                 category_id: 1   
             },
@@ -34,12 +29,6 @@ export class ItemsService {
                 description: 'Цыпленок, моцарелла, сыры чеддер и пармезан, сырный соус, томаты, фирменный соус альфредо, чеснок',
                 image_url: 'https://dodopizza-a.akamaihd.net/static/Img/Products/42360a7dcb7640c998b723231586fe84_292x292.webp',
                 different_sizes: true,
-                small_size_in_stock: true,
-                medium_size_in_stock: true,
-                big_size_in_stock: true,
-                small_size_price: 499,
-                medium_size_price: 749,
-                big_size_price: 879,
                 price: null,
                 category_id: 1   
             },
@@ -57,7 +46,7 @@ export class ItemsService {
     }
 
     async getOne(item_id: number) {
-        const item = await this.itemRepository.findOne({where: {id: item_id}});
+        const item = await this.itemRepository.findOne({where: {id: item_id}, include: ItemsExtrafields});
 
         return item;
     }

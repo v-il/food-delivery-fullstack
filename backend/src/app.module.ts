@@ -19,6 +19,7 @@ import { UserModule } from './users/users.module';
 import { User } from './users/users.model';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/orders.model';
+import { ItemsExtrafields } from './items/items-extrafields.model';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { Order } from './orders/orders.model';
         CartItem,
         User,
         Order,
+        ItemsExtrafields
       ],
       autoLoadModels: true,
     }),

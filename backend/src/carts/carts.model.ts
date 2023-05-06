@@ -6,6 +6,7 @@ import { Order } from "src/orders/orders.model";
 
 interface CartCreationAttributes {
     string_id: string;
+    tg_uid: number;
 }
 
 @Table({ tableName: "carts" })
@@ -28,10 +29,17 @@ export class Cart extends Model<Cart, CartCreationAttributes> {
 
     @ApiProperty({ example: 'false', description: 'Оформлен ли заказ по корзине' })
     @Column({
-        type: DataType.STRING,
+        type: DataType.BOOLEAN,
         defaultValue: false
     })
     done: boolean;
+
+    @ApiProperty({ example: 123456789, description: 'Telegram User ID для заказ через бота' })
+    @Column({
+        type: DataType.BIGINT,
+        defaultValue: null
+    })
+    tg_uid: number;
 
     @BelongsToMany(() => Item, () => CartItem)
     items: CartItem[]
