@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CartItem } from './cart-items.model';
 import { CartsService } from 'src/carts/carts.service';
 import { ItemsService } from 'src/items/items.service';
+import { ItemsExtrafields } from 'src/items/items-extrafields.model';
 
 @Injectable()
 export class CartItemsService {
@@ -29,10 +30,12 @@ export class CartItemsService {
 
     const item = (await this.itemService.getOne(item_id)).dataValues;
 
+    const sizes = (await ItemsExtrafields.findOne({where: {item_id, type: size}})).dataValues;
+
     if (isCartItemExist) {
       await isCartItemExist.update({
         number: isCartItemExist.number + 1,
-        total_price: item[this.priceSize[size]] * (isCartItemExist.number + 1),
+        total_price: sizes.price * (isCartItemExist.number + 1),
       });
       await isCartItemExist.save();
       return true;
@@ -42,7 +45,7 @@ export class CartItemsService {
       item_id,
       cart_id: cart.id,
       size,
-      total_price: item[this.priceSize[size]],
+      total_price: sizes.price,
     });
 
     if (!cartItem) {

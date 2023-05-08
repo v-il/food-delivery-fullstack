@@ -3,6 +3,8 @@
 `docker compose build`  
   
 Если запуск происходит впервые, то перед выполнением команды `docker compose up -d` выполнить:  
+Создать в корне папку data/db  
+`docker compose run db`    
 `docker compose run backend npm i`  
 `docker compose run frontend npm i`
 
@@ -29,6 +31,6 @@ root:root
 http://localhost:5000/docs
 
 Для заполнения таблицы ролей и категорий перейти по следующим роутам
-http://localhost:5000/roles/init
-http://localhost:5000/categories/init
-http://localhost:5000/item/init
+http://localhost:5000/roles/init  
+http://localhost:5000/categories/init  
+http://localhost:5000/item/init  

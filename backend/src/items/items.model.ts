@@ -1,7 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiExtraModels, ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { CartItem } from "src/cart-items/cart-items.model";
 import { Category } from "src/categories/categories.model";
+import { ItemsExtrafields } from "./items-extrafields.model";
 
 interface ItemCreationAttributes {
     name: string;
@@ -50,59 +51,23 @@ export class Item extends Model<Item, ItemCreationAttributes> {
     })
     image_url: string;
 
+    @ApiProperty({example: [{"id": 1,
+    "type": "small",
+    "tg_frontend_type": "маленькая",
+    "in_stock": true,
+    "price": 459,
+    "item_id": 1,
+    "createdAt": "2023-05-06T16:28:47.622Z",
+    "updatedAt": "2023-05-06T16:28:47.622Z"}], description: 'Допполя'})
+    @HasMany(() => ItemsExtrafields)
+    sizes: ItemsExtrafields[];
+    
     @ApiProperty({ example: true, description: 'Продается ли товар в нескольких вариантах размера' })
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false
     })
     different_sizes: boolean;
-
-    @ApiProperty({ example: true, description: 'Наличие маленькой версии товара' })
-    @Column({
-        type: DataType.BOOLEAN,
-        defaultValue: false
-    })
-    small_size_in_stock: boolean;
-
-    @ApiProperty({ example: true, description: 'Наличие средней версии товара' })
-    @Column({
-        type: DataType.BOOLEAN,
-        defaultValue: false
-    })
-    medium_size_in_stock: boolean;
-
-    @ApiProperty({ example: true, description: 'Наличие большой версии товара' })
-    @Column({
-        type: DataType.BOOLEAN,
-        defaultValue: false
-
-    })
-    big_size_in_stock: boolean;
-
-
-    @ApiProperty({ example: 499, description: 'Цена маленькой версии товара' })
-    @Column({
-        type: DataType.INTEGER,
-        defaultValue: null
-
-    })
-    small_size_price: number;
-
-    @ApiProperty({ example: 499, description: 'Цена средней версии товара' })
-    @Column({
-        type: DataType.INTEGER,
-        defaultValue: null
-
-    })
-    medium_size_price: number;
-
-    @ApiProperty({ example: 499, description: 'Цена большой версии товара' })
-    @Column({
-        type: DataType.INTEGER,
-        defaultValue: null
-
-    })
-    big_size_price: number;
 
     @ApiProperty({ example: 499, description: 'Цена товара, если у него нет деления на размер' })
     @Column({
