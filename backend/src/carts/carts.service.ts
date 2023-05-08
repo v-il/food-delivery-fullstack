@@ -38,7 +38,7 @@ export class CartsService {
     }
 
     async getTg(tg_uid: number) {
-        const cart = await this.cartRepository.findOne({where: [{tg_uid: tg_uid, done: false}]});
+        const cart = await this.cartRepository.findOne({where: [{tg_uid: tg_uid, done: false    }]});
         
         if (!cart) {
             throw new NotFoundException();

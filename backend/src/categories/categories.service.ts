@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Category } from './categories.model';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Item } from 'src/items/items.model';
+import { ItemsExtrafields } from 'src/items/items-extrafields.model';
 
 @Injectable()
 export class CategoriesService {
@@ -44,7 +45,10 @@ export class CategoriesService {
     async getItemsOfCategory(name: string) {
         const items = await this.categoryRepository.findOne({where: {
             name
-        }, include: Item})
+        }, include: [{
+            model: Item,
+            include: [ItemsExtrafields]
+        }]})
 
         return items;
     }

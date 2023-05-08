@@ -88,6 +88,4 @@ export class Item extends Model<Item, ItemCreationAttributes> {
 
     @HasMany(() => CartItem)
     cartItem: CartItem[]
-
-    
 }
