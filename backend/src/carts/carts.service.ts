@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Res } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Cart } from './carts.model';
 import * as randomstring from 'randomstring';

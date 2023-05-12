@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CartsService } from './carts.service';
 import { Cart } from './carts.model';
@@ -15,12 +15,22 @@ export class CartsController {
     @ApiOperation({ summary: 'Telegram | Создание корзины' })
     @ApiResponse({ status: 200, type: Cart })
     @Post()
-    create(@Body() dto: CreateCartDto) {
-        console.log(dto)
+    async create(@Body() dto: CreateCartDto, @Res() res, @Req() req) {
+        if (req.cookies) {
+            const cartId = req.cookies["cart"];
+            console.log(cartId);
+
+            if (cartId) {
+                const cart = await this.cartService.get(cartId);
+                return res.json(cart);
+            }
+        }
         if (dto && dto.tg_uid) {
             return this.cartService.createTg(dto.tg_uid)
         } 
-        return this.cartService.create();
+        const cart = await this.cartService.create();
+        res.cookie('cart', cart.string_id);
+        res.json(cart);
     }
 
     @ApiOperation({ summary: 'Web only Получение корзины' })
@@ -35,8 +45,7 @@ export class CartsController {
     @ApiResponse({ status: 200, type: Cart })
     @ApiNotFoundResponse({ description: 'Корзина не найдена' })
     @Get('/tg/:tg_uid')
-    getTg(@Param('tg_uid') tg_uid: number) {
-        console.log(tg_uid)
+    getTg(@Param('tg_uid') tg_uid: number, @Res() res: Response) {
         return this.cartService.getTg(tg_uid);
     }
 }
