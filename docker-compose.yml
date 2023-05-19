@@ -11,6 +11,8 @@ services:
     volumes:
       - ./backend:/home/app/backend
     command: "npm run start:dev"
+    networks:
+      - food
   frontend:
     image: "node:lts"
     restart: unless-stopped
@@ -21,6 +23,8 @@ services:
     volumes:
       - ./frontend:/home/app/frontend
     command: "npm run dev"
+    networks:
+      - food
   python:
     build:
       context: ./python
@@ -35,6 +39,8 @@ services:
     command: "python3 main.py"
     depends_on:
       - backend
+    networks:
+      - food
   db:
     image: postgres:15.1
     restart: unless-stopped
@@ -45,10 +51,14 @@ services:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "root"
       POSTGRES_DB: "food"
+    networks:
+      - food
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
     networks:
-      - default
+      - food
+networks:
+  food:

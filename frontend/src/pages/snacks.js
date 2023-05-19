@@ -1,9 +1,11 @@
 import CatalogueSkeleton from "@/components/UI/CatalogueSkeleton/CatalogueSkeleton";
 
-export default function Home() {
+const SnacksPage = () => {
   return (
     <>
-      <CatalogueSkeleton categoryName="Пицца"/>
+      <CatalogueSkeleton categoryName="Закуски" />
     </>
   );
-}
+};
+
+export default SnacksPage;

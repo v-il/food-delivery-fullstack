@@ -1,0 +1,23 @@
+.button {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    cursor: pointer;
+}
+
+.button:hover {
+    filter: brightness(95%);
+}
+
+.button:active {
+    filter: brightness(90%);
+}
+
+.green {
+    background: #0EC645;
+    color: #fff;
+}
+
+.grey {
+    background: #D9D9D9;
+    color: #717171;
+}

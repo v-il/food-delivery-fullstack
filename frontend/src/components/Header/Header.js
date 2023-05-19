@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "../UI/Button";
 
 const Header = () => {
   return (
@@ -12,23 +13,23 @@ const Header = () => {
             <Link href="/" className="transition-all hover:opacity-60">
               пицца
             </Link>
-            <Link href="/" className="transition-all hover:opacity-60">
+            <Link href="/snacks" className="transition-all hover:opacity-60">
               закуски
             </Link>
-            <Link href="/" className="transition-all hover:opacity-60">
+            <Link href="/desserts" className="transition-all hover:opacity-60">
               десерты
             </Link>
-            <Link href="/" className="transition-all hover:opacity-60">
+            <Link href="/drinks" className="transition-all hover:opacity-60">
               напитки
             </Link>
-            <Link href="/" className="transition-all hover:opacity-60">
+            <Link href="/combo" className="transition-all hover:opacity-60">
               комбо
             </Link>
           </nav>
 
           <div className="flex gap-x-5">
-            <div>Войти</div>
-            <div>Корзина</div>
+            <Button variant="grey">войти</Button>
+            <Button style="px-7">корзина</Button>
           </div>
         </nav>
       </div>
