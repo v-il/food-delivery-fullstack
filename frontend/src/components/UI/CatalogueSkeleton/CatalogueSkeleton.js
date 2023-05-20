@@ -22,7 +22,7 @@ const CatalogueSkeleton = ({items, title, categoryName}) => {
 
             {preloader && <Preloader/>}
             {!preloader && <div className="grid grid-cols-4 gap-x-5 mt-11">
-              {items && items.map(item => <Item image={item.image_url} description={item.description} title={item.name} sizes={item.sizes} itemPrice={item.price}/>)}
+              {items && items.map(item => <Item id={item.id} image={item.image_url} description={item.description} title={item.name} sizes={item.sizes} itemPrice={item.price}/>)}
             </div>}
           </div>
         </div>

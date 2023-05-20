@@ -12,6 +12,11 @@
     filter: brightness(90%);
 }
 
+.button:disabled {
+    opacity: 50%;
+    cursor: not-allowed;
+}
+
 .green {
     background: #0EC645;
     color: #fff;

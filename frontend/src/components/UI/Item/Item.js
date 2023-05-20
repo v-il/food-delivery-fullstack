@@ -1,15 +1,26 @@
 import { useEffect, useState } from "react";
 import Button from "../Button";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCartReducer } from "@/redux/slices/cartSlice";
 
-const Item = ({ image, title, description, sizes, itemPrice }) => {
+const Item = ({ id, image, title, description, sizes, itemPrice }) => {
   const picClassName = `rounded-2xl h-72 bg-cover`;
-
+  const dispatch = useDispatch();
   const [price, setPrice] = useState(0);
+  const [sizeToSend, setSizeToSend] = useState('');
+
+  const disabledButton = useSelector(state => state.cart.disabledAddToCartButton);
+
+  const addHandler = () => {
+    dispatch(addToCartReducer({itemId: id, size: sizeToSend}));
+    console.log({itemId: id, size: sizeToSend})
+  }
 
   useEffect(() => {
     sizes.length > 0 && setPrice(sizes[0].price);
-  }, [sizes]);
+    sizes.length > 0 && setSizeToSend(sizes[0].type);
+  }, []);
 
   return (
     <div className="border rounded-2xl p-5 h-full flex flex-col justify-between">
@@ -31,10 +42,10 @@ const Item = ({ image, title, description, sizes, itemPrice }) => {
         )} */}
 
         <div className="flex justify-between">
-          {sizes && sizes.map((size) => size.in_stock && <div className={price === size.price ? "transition-all cursor-pointer text-center font-bold text-[#0EC645]" : "transition-all  text-center font-normal cursor-pointer hover:opacity-70 text-[#6D6A6A]"} onClick={() => setPrice(size.price)}>{size.tg_frontend_type}</div>)}
+          {sizes && sizes.map((size) => size.in_stock && <div className={price === size.price ? "transition-all cursor-pointer text-center font-bold text-[#0EC645]" : "transition-all  text-center font-normal cursor-pointer hover:opacity-70 text-[#6D6A6A]"} onClick={() => {setPrice(size.price); setSizeToSend(size.type)}}>{size.tg_frontend_type}</div>)}
         </div>
 
-        <Button className="w-full mt-6 py-1.5 text-xl">
+        <Button disabled={disabledButton} onClick={addHandler} className="w-full mt-6 py-1.5 text-xl">
           в корзину{" "}
           {sizes.length > 0 ? <b>{`${price ? price : "---"} Р`}</b> : <b>{itemPrice} Р</b>}
         </Button>
