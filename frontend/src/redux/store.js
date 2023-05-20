@@ -1,7 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
+import itemsReducer from "./slices/itemsSlice"
+
 
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    items: itemsReducer
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

@@ -6,7 +6,10 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
   const app = await NestFactory.create(AppModule);
-  app.enableCors()
+  app.enableCors({
+    credentials: true,
+    origin: ["*", "http://localhost:3000"],
+  })
   app.use(cookieParser());
 
   const docsConfig = new DocumentBuilder().setTitle('Еда. Документация').build();

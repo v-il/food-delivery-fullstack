@@ -5,7 +5,7 @@ import Footer from "@/components/Footer/Footer";
 import Ad from "@/components/UI/Ad/Ad";
 import Item from "@/components/UI/Item/Item";
 
-const CatalogueSkeleton = ({title, categoryName, items}) => {
+const CatalogueSkeleton = ({items, title, categoryName}) => {
   return (
     <>
       <Header />
@@ -16,7 +16,7 @@ const CatalogueSkeleton = ({title, categoryName, items}) => {
             <h1 className="text-4xl font-bold">{categoryName}</h1>
 
             <div className="grid grid-cols-4 gap-x-5 mt-11">
-              <Item />
+              {items && items.map(item => <Item image={item.image_url} description={item.description} title={item.name} sizes={item.sizes} itemPrice={item.price}/>)}
             </div>
           </div>
         </div>
