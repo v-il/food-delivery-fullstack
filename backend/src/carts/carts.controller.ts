@@ -36,9 +36,9 @@ export class CartsController {
     @ApiOperation({ summary: 'Web only Получение корзины' })
     @ApiResponse({ status: 200, type: Cart })
     @ApiNotFoundResponse({ description: 'Корзина не найдена' })
-    @Get('/:string_id')
-    get(@Param('string_id') string_id: string) {
-        return this.cartService.get(string_id);
+    @Get('')
+    get(@Req() req) {
+        return this.cartService.get(req.cookies["cart"]);
     }
 
     @ApiOperation({ summary: 'Telegram only Получение корзины' })
