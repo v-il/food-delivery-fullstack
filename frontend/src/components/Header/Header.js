@@ -29,7 +29,7 @@ const Header = () => {
 
           <div className="flex gap-x-5">
             <Button variant="grey">войти</Button>
-            <Button style="px-7">корзина</Button>
+            <Link href="/cart"><Button style="px-7">корзина</Button></Link>
           </div>
         </nav>
       </div>
