@@ -1,11 +1,19 @@
 import CatalogueSkeleton from "@/components/UI/CatalogueSkeleton/CatalogueSkeleton";
+import { fetchItemsReducer } from "@/redux/slices/itemsSlice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const SnacksPage = () => {
+export default function SnacksPage() {
+  const dispatch = useDispatch();
+  const items = useSelector(state => state.items.items)
+  useEffect(() => {
+    dispatch(fetchItemsReducer({category: "snacks"}));
+  }, [dispatch])
+
+
   return (
     <>
-      <CatalogueSkeleton categoryName="Закуски" />
+      <CatalogueSkeleton title="Закуски" categoryName="Закуски" items={items.items} />
     </>
   );
-};
-
-export default SnacksPage;
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button";
 import Image from "next/image";
 
@@ -7,8 +7,8 @@ const Item = ({ image, title, description, sizes, itemPrice }) => {
 
   const [price, setPrice] = useState(0);
 
-  useState(() => {
-    sizes && setPrice(sizes[0].price);
+  useEffect(() => {
+    sizes.length > 0 && setPrice(sizes[0].price);
   }, [sizes]);
 
   return (
@@ -31,12 +31,12 @@ const Item = ({ image, title, description, sizes, itemPrice }) => {
         )} */}
 
         <div className="flex justify-between">
-          {sizes && sizes.map((size) => <div className={price === size.price ? "transition-all cursor-pointer text-center font-bold text-[#0EC645]" : "transition-all  text-center font-normal cursor-pointer hover:opacity-70 text-[#6D6A6A]"} onClick={() => setPrice(size.price)}>{size.tg_frontend_type}</div>)}
+          {sizes && sizes.map((size) => size.in_stock && <div className={price === size.price ? "transition-all cursor-pointer text-center font-bold text-[#0EC645]" : "transition-all  text-center font-normal cursor-pointer hover:opacity-70 text-[#6D6A6A]"} onClick={() => setPrice(size.price)}>{size.tg_frontend_type}</div>)}
         </div>
 
         <Button className="w-full mt-6 py-1.5 text-xl">
           в корзину{" "}
-          {sizes ? <b>{`${price ? price : "---"} Р`}</b> : <b>{price} Р</b>}
+          {sizes.length > 0 ? <b>{`${price ? price : "---"} Р`}</b> : <b>{itemPrice} Р</b>}
         </Button>
       </div>
     </div>

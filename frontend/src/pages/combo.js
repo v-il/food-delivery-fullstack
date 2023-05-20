@@ -3,7 +3,7 @@ import CatalogueSkeleton from "@/components/UI/CatalogueSkeleton/CatalogueSkelet
 const ComboPage = () => {
   return (
     <>
-      <CatalogueSkeleton categoryName="Комбо" />
+      <CatalogueSkeleton title="Комбо" categoryName="Комбо" />
     </>
   );
 };

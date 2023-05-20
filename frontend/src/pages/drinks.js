@@ -1,18 +1,17 @@
 import CatalogueSkeleton from "@/components/UI/CatalogueSkeleton/CatalogueSkeleton";
-import axios from "axios";
+import { fetchItemsReducer } from "@/redux/slices/itemsSlice";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const DrinksPage = () => {
-    async function test() {
-        await axios.get('http://localhost:5000/promobanners');
-    }
-
-    useEffect(() => {
-        test()
-    }, [])
+  const dispatch = useDispatch();
+  const items = useSelector(state => state.items.items)
+  useEffect(() => {
+    dispatch(fetchItemsReducer({category: "drinks"}));
+  }, [dispatch])
   return (
     <>
-      <CatalogueSkeleton categoryName="Напитки" />
+      <CatalogueSkeleton title="Напитки" categoryName="Напитки" items={items.items}/>
     </>
   );
 };

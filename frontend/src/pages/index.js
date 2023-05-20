@@ -1,8 +1,5 @@
 import CatalogueSkeleton from "@/components/UI/CatalogueSkeleton/CatalogueSkeleton";
-import { axiosQuery } from "@/helpers/queries/axiosInstance";
 import { fetchItemsReducer } from "@/redux/slices/itemsSlice";
-import axios from "axios";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,7 +13,7 @@ export default function Home() {
 
   return (
     <>
-      <CatalogueSkeleton categoryName="Пицца" items={items.items} />
+      <CatalogueSkeleton title={"Пицца"} categoryName="Пицца" items={items.items} />
     </>
   );
 }

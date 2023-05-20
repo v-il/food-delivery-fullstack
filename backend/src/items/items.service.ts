@@ -206,7 +206,7 @@ export class ItemsService {
 
             {
                 type: '0.5',
-                tg_frontend_type: '2 л',
+                tg_frontend_type: '0.5 л',
                 in_stock: true,
                 price: 99,
                 item_id: 11
@@ -221,7 +221,7 @@ export class ItemsService {
 
             {
                 type: '0.5',
-                tg_frontend_type: '2 л',
+                tg_frontend_type: '0.5 л',
                 in_stock: true,
                 price: 99,
                 item_id: 12

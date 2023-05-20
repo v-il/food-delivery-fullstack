@@ -2,7 +2,8 @@ import { axiosQuery } from "@/helpers/queries/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    items: []
+    items: [],
+    itemsPreloader: true
 }
 
 export const fetchItemsReducer = createAsyncThunk(
@@ -24,7 +25,13 @@ export const itemsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchItemsReducer.fulfilled, (state, action) => {
             state.items = action.payload
-            console.log(action.payload)
+
+            state.itemsPreloader = false;
+            console.log(action.payload);
+        })
+        
+        .addCase(fetchItemsReducer.rejected, (state) => {
+            state.itemsPreloader = false;
         })
     }
 })
