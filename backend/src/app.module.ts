@@ -20,6 +20,8 @@ import { User } from './users/users.model';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/orders.model';
 import { ItemsExtrafields } from './items/items-extrafields.model';
+import { LoginLink } from './users/loginLinks.model';
+import { Token } from './users/tokens.model';
 
 @Module({
   imports: [
@@ -43,7 +45,9 @@ import { ItemsExtrafields } from './items/items-extrafields.model';
         CartItem,
         User,
         Order,
-        ItemsExtrafields
+        ItemsExtrafields,
+        LoginLink,
+        Token
       ],
       autoLoadModels: true,
     }),
