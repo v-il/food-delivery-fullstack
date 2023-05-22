@@ -23,6 +23,19 @@ export const addToCartReducer = createAsyncThunk(
     }
 )
 
+export const getCartContentReducer = createAsyncThunk(
+    'cart/get',
+    async function (_, {rejectWithValue}) {
+        const response = await axiosQuery.get('/carts')
+
+        if (response.status === 200) {
+            return response.data
+        } else {
+            rejectWithValue(response.message);
+        }
+    }
+)
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState,
@@ -38,6 +51,10 @@ export const cartSlice = createSlice({
         
         .addCase(addToCartReducer.rejected, (state) => {
             state.disabledAddToCartButton = false;
+        })
+
+        .addCase(getCartContentReducer.fulfilled, (state, action) => {
+            state.items = action.payload.items;
         })
     }
 })

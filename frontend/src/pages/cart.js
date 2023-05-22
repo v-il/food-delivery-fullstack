@@ -4,8 +4,39 @@ import Header from "@/components/Header/Header";
 import Button from "@/components/UI/Button";
 import CartItem from "@/components/UI/CartItem/CartItem";
 import OrderForm from "@/components/UI/OrderForm/OrderForm";
+import { axiosQuery } from "@/helpers/queries/axiosInstance";
+import { getCartContentReducer } from "@/redux/slices/cartSlice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const CartPage = () => {
+  
+  const dispatch = useDispatch();
+  const items = useSelector(state => state.cart.items);
+
+  console.log(items);
+
+  useEffect(() => {
+    dispatch(getCartContentReducer())
+  }, [])
+
+  const decrementHandler = async (id) => {
+      await axiosQuery.post('/cart-items/decrement', {
+        cart_item_id: id
+      })
+
+      dispatch(getCartContentReducer());
+  }
+
+  const incrementHandler = async (itemId, size) => {
+    const cartId = localStorage.getItem('cart');
+    await axiosQuery.post('/cart-items/add', {
+      cart_id: cartId,
+      item_id: itemId,
+      size
+    });
+    dispatch(getCartContentReducer());
+  }
   return (
     <>
       <DocHead title="Корзина" />
@@ -15,7 +46,7 @@ const CartPage = () => {
         <h1 className="text-4xl font-bold mt-10">Ваша корзина</h1>
         <div className="grid grid-cols-4 gap-x-2 mt-9">
           <div className="col-span-3">
-            <CartItem name="Пицца" price={4121} number={10} />
+            {items && items.map((item) => <CartItem increment={() => incrementHandler(item.id, item.CartItem.size)} decrement={() => decrementHandler(item.CartItem.id)} name={item.name} image={item.image_url} price={item.CartItem.total_price} number={item.CartItem.number} />)}
           </div>
           <div class="border-2 rounded-2xl p-4">
             <p className="text-base font-bold">Оформление заказа</p>
