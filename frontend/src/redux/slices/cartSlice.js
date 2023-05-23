@@ -37,6 +37,21 @@ export const getCartContentReducer = createAsyncThunk(
     }
 )
 
+export const sendOrderReducer = createAsyncThunk(
+    'order/add',
+    async function ({user_id, name, address, delivery_time, comment, cart_id, promocode}, {rejectWithValue}) {
+        const response = await axiosQuery.post('/orders', {
+            user_id, name, address, delivery_time, comment, cart_id, promocode
+        });
+
+        if (response.status === 201 | 200) {
+            return response.data
+        } else {
+            rejectWithValue(response.message);
+        }
+    }
+)
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState,
@@ -58,6 +73,11 @@ export const cartSlice = createSlice({
             state.items = action.payload.items;
             state.cost = 0;
             action.payload.items.map((item) => state.cost += item.CartItem.total_price)            
+        })
+
+        .addCase(sendOrderReducer.fulfilled, (state, action) => {
+            console.log(action.payload);
+            localStorage.removeItem('cart');
         })
     }
 })

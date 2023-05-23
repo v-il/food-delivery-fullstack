@@ -2,10 +2,13 @@ import Input from "@/components/Input/Input";
 import TextArea from "@/components/TextArea/TextArea";
 import Button from "@/components/UI/Button";
 import { axiosQuery } from "@/helpers/queries/axiosInstance";
+import { getCartContentReducer, sendOrderReducer } from "@/redux/slices/cartSlice";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const OrderForm = () => {
+  const dispatch = useDispatch();
+
   const [values, setValues] = useState({
     name: "",
     phone: "",
@@ -13,18 +16,34 @@ const OrderForm = () => {
     address: "",
     comment: "",
     promocode: "",
+    delivery_time: "",
+    comment: "",
+    promocode: "",
   });
 
   const user = useSelector((state) => state.user.user);
-  const isAuth = useSelector(state => state.user.isAuth);
   const [tip, setTip] = useState("");
+
+  const sendOrder = async () => {
+    await dispatch(
+      sendOrderReducer({
+        user_id: user.id,
+        name: values.name,
+        address: values.address,
+        delivery_time: values.delivery_time,
+        comment: values.comment,
+        cart_id: localStorage.getItem("cart"),
+        promocode: values.promocode
+      })
+    );
+  };
 
   useEffect(() => {
     setValues({
       ...values,
       name: user.rl_name ? user.rl_name : "",
       phone: user.phone ? user.phone : "",
-      address: user.address ? user.address : ""
+      address: user.address ? user.address : "",
     });
   }, [user]);
   const addressHandler = async (value) => {
@@ -43,6 +62,10 @@ const OrderForm = () => {
     setValues({ ...values, address: tip });
     setTip("");
   };
+
+  const checkPromocode = async () => {
+    await axiosQuery.get(`/promocodes/verify/${values.promocode}`).then(() => alert('Промокод верный')).catch(() => alert('Неверный промокод'));
+  }
 
   return (
     <div className="flex flex-col mt-2.5">
@@ -76,10 +99,31 @@ const OrderForm = () => {
           </div>
         )}
       </div>
-      <Input placeholder="Время доставки" value={""} className="mb-2" />
-      <TextArea placeholder="Комментарий" value={""} className="mb-2" />
-      <Input placeholder="Промокод" value={""} className="mb-2" />
-      <Button className={"py-3 w-full mt-3.5"}>Оформить заказ</Button>
+      <Input
+        placeholder="Время доставки"
+        type="time"
+        value={values.delivery_time}
+        onChange={(e) =>
+          setValues({ ...values, delivery_time: e.target.value })
+        }
+        className="mb-2 mt-14"
+      />
+      <TextArea
+        placeholder="Комментарий"
+        value={values.comment}
+        onChange={(e) => setValues({ ...values, comment: e.target.value })}
+        className="mb-2"
+      />
+      <Input
+        placeholder="Промокод"
+        value={values.promocode}
+        onChange={(e) => setValues({ ...values, promocode: e.target.value })}
+        className="mb-2"
+        onBlur={() => checkPromocode()}
+      />
+      <Button onClick={() => sendOrder()} className={"py-3 w-full mt-3.5"}>
+        Оформить заказ
+      </Button>
     </div>
   );
 };
