@@ -17,7 +17,8 @@ def start(message):
 @bot.message_handler(func=lambda message: message.text == 'Авторизоваться')
 def auth(message):
     tg_id = message.from_user.id
-    url = f'http://backend:5000/tg-auth/{tg_id}'
+    bot.send_message(message.chat.id, f'TGID: {tg_id}')
+    url = f'http://backend:5000/user/tg-auth/{tg_id}'
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -26,6 +27,7 @@ def auth(message):
             bot.send_message(message.chat.id, f'Для авторизации перейдите по ссылке: {link}')
         else:
             bot.send_message(message.chat.id, 'Произошла ошибка при получении ссылки на авторизацию')
+            bot.send_message(message.chat.id, f'STATUSCODE: {response.status_code}')
     except requests.RequestException:
         bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
 
