@@ -99,6 +99,7 @@ const ProfilePage = () => {
             <div className="mt-5">
               <div>День рождения</div>
               <Input
+                type="date"
                 value={updateData.birthday}
                 onChange={(e) => {
                   setButtonDisabled(false);

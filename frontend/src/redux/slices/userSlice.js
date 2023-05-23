@@ -41,7 +41,8 @@ export const updateUserInfoReducer = createAsyncThunk(
             rl_name,
             phone,
             birthday,
-            address
+            address,
+            tg_id
         });
         if (response.status === 200) {
             return response.data
