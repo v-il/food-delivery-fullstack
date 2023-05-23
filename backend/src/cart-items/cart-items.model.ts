@@ -4,6 +4,7 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -16,6 +17,7 @@ interface CartItemCreationAttributes {
   size: string;
   number: number;
   total_price: number;
+  tg_front_size: string;
 }
 
 @Table({ tableName: 'cart_items' })
@@ -42,6 +44,13 @@ export class CartItem extends Model<CartItem, CartItemCreationAttributes> {
     allowNull: true,
   })
   size: string;
+
+  @ApiProperty({ example: 'маленькая', description: 'Размер товара для тг и веба' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  tg_front_size: string;
 
   @ApiProperty({ example: 1099, description: 'Итоговая стоимость' })
   @Column({

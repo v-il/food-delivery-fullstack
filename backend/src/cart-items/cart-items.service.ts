@@ -25,32 +25,50 @@ export class CartItemsService {
     const cart = await this.cartService.get(cart_id);
 
     const isCartItemExist = await this.cartItemRepository.findOne({
-      where: { item_id, cart_id: cart.id },
+      where: { item_id, cart_id: cart.id, size},
     });
 
     const item = (await this.itemService.getOne(item_id)).dataValues;
 
-    const sizes = (await ItemsExtrafields.findOne({where: {item_id, type: size}})).dataValues;
+    console.log(`\n\n\n\n\n\n\n\nsize ${size}\n\n\n\n\n\n\n\n`);
+    console.log(`\n\n\n\n\n\n\n\ncart ${cart.id}\n\n\n\n\n\n\n\n`);
+    console.log(isCartItemExist);
 
-    if (isCartItemExist) {
-      await isCartItemExist.update({
-        number: isCartItemExist.number + 1,
-        total_price: sizes.price * (isCartItemExist.number + 1),
-      });
-      await isCartItemExist.save();
-      return true;
+    const sizes = (
+      await ItemsExtrafields.findOne({ where: { item_id, type: size } })
+    ).dataValues;
+    console.log(`\n\n\n\n\n\n\n\nsizes ${sizes.price}\n\n\n\n\n\n\n\n`);
+
+    try {
+      if (isCartItemExist === null) {
+        const cartItem = await this.cartItemRepository.create({
+          size,
+          item_id,
+          cart_id: cart.id,
+          tg_front_size: sizes.tg_frontend_type,
+          total_price: sizes.price,
+        });
+        if (!cartItem) {
+          return false;
+        }
+      }
+  
+    } catch (e) {
+      console.log(e)
     }
 
-    const cartItem = await this.cartItemRepository.create({
-      item_id,
-      cart_id: cart.id,
-      size,
-      total_price: sizes.price,
-    });
-
-    if (!cartItem) {
-      return false;
+    if (isCartItemExist !== null) {
+        await isCartItemExist.update({
+          number: isCartItemExist.number + 1,
+          size,
+          tg_front_size: sizes.tg_frontend_type,
+          total_price: sizes.price * (isCartItemExist.number + 1),
+        });
+        await isCartItemExist.save();
+        return true;
     }
+
+    
 
     return true;
   }
@@ -72,9 +90,15 @@ export class CartItemsService {
       return true;
     }
 
-    cartItem.number = cartItem.dataValues.number - 1;
-    cartItem.total_price =
-      item[this.priceSize[cartItem.dataValues.size]] * cartItem.number;
+      const needed = item.sizes.filter(
+        (item) =>
+          item.dataValues.price ===
+          cartItem.dataValues.total_price / cartItem.dataValues.number,
+      );
+
+      cartItem.number = cartItem.dataValues.number - 1;
+      cartItem.total_price = needed[0].price * cartItem.number;
+
 
     await cartItem.save();
 
