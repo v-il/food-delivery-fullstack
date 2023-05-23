@@ -14,6 +14,8 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const items = useSelector(state => state.cart.items);
 
+  const cost = useSelector(state => state.cart.cost);
+
   console.log(items);
 
   useEffect(() => {
@@ -46,12 +48,13 @@ const CartPage = () => {
         <h1 className="text-4xl font-bold mt-10">Ваша корзина</h1>
         <div className="grid grid-cols-4 gap-x-2 mt-9">
           <div className="col-span-3">
-            {items && items.map((item) => <CartItem increment={() => incrementHandler(item.id, item.CartItem.size)} decrement={() => decrementHandler(item.CartItem.id)} name={item.name} image={item.image_url} price={item.CartItem.total_price} number={item.CartItem.number} />)}
+            {items && items.map((item) => <CartItem increment={() => incrementHandler(item.id, item.CartItem.size)} size={item.CartItem.tg_front_size} decrement={() => decrementHandler(item.CartItem.id)} name={item.name} image={item.image_url} price={item.CartItem.total_price} number={item.CartItem.number} />)}
+            {items.length === 0 && <h4 className="text-xl">В корзине пусто :(</h4>}
           </div>
           <div class="border-2 rounded-2xl p-4">
             <p className="text-base font-bold">Оформление заказа</p>
             <p className="text-3xl mt-2.5">
-              Итого <b>000 Р</b>
+              Итого <b>{cost} Р</b>
             </p>
             <Button className={"py-3 w-full mt-3.5"}>
               Войти с помощью Telegram

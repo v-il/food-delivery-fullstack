@@ -3,7 +3,6 @@ import TextArea from "@/components/TextArea/TextArea";
 import Button from "@/components/UI/Button";
 import { axiosQuery } from "@/helpers/queries/axiosInstance";
 import { useState } from "react";
-import { AddressSuggestions } from "react-dadata";
 
 const OrderForm = () => {
   const [values, setValues] = useState({
@@ -14,7 +13,7 @@ const OrderForm = () => {
     comment: '',
     promocode: ''
   })
-  
+    
   const [tip, setTip] = useState('');
 
   const addressHandler = async (value) => {
