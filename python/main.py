@@ -73,7 +73,7 @@ def select_category(message):
             for product in products:
                 name = product.get('name')
                 if product.get('different_sizes') == True:
-                    size = product.get('size')
+                    size = product.get('type')
                     price = product.get('price')
                     button_text = f'{name}\nРазмер: {size}\nЦена: {price}'
                     button = telebot.types.KeyboardButton(button_text)
