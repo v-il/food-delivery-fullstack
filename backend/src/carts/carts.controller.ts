@@ -21,8 +21,10 @@ export class CartsController {
             console.log(cartId);
 
             if (cartId) {
-                const cart = await this.cartService.get(cartId);
-                return res.json(cart);
+                const cart = (await Cart.findOne({where: {string_id: cartId}}));
+                if (cart && cart.dataValues !== null ) {
+                    return res.json(cart);
+                }
             }
         }
         if (dto && dto.tg_uid) {

@@ -3,7 +3,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     items: [],
-    disabledAddToCartButton: false
+    disabledAddToCartButton: false,
+    cost: 0,
 }
 
 export const addToCartReducer = createAsyncThunk(
@@ -55,6 +56,8 @@ export const cartSlice = createSlice({
 
         .addCase(getCartContentReducer.fulfilled, (state, action) => {
             state.items = action.payload.items;
+            state.cost = 0;
+            action.payload.items.map((item) => state.cost += item.CartItem.total_price)            
         })
     }
 })
