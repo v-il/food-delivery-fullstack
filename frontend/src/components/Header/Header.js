@@ -23,26 +23,26 @@ const Header = () => {
             <Link href="/">еда.</Link>
           </h3>
           <nav className="flex gap-x-10 text-xl">
-            <Link href="/" onClick={() => window.location.href('/')} className="transition-all hover:opacity-60">
+            <Link href="/" onClick={() => window.location.replace('/')} className="transition-all hover:opacity-60">
               пицца
             </Link>
-            <Link href="/snacks" onClick={() => window.location.href('/snacks')} className="transition-all hover:opacity-60">
+            <Link href="/snacks" onClick={() => window.location.replace('/snacks')} className="transition-all hover:opacity-60">
               закуски
             </Link>
-            <Link href="/desserts" onClick={() => window.location.href('/desserts')} className="transition-all hover:opacity-60">
+            <Link href="/desserts" onClick={() => window.location.replace('/desserts')} className="transition-all hover:opacity-60">
               десерты
             </Link>
-            <Link href="/drinks" onClick={() => window.location.href('/drinks')} className="transition-all hover:opacity-60">
+            <Link href="/drinks" onClick={() => window.location.replace('/drinks')} className="transition-all hover:opacity-60">
               напитки
             </Link>
-            <Link href="/combo" onClick={() => window.location.href('/combo')} className="transition-all hover:opacity-60">
+            <Link href="/combo" onClick={() => window.location.replace('/combo')} className="transition-all hover:opacity-60">
               комбо
             </Link>
           </nav>
 
           <div className="flex gap-x-5 items-center">
             <Link href="/cart"><Button style="px-7">корзина</Button></Link>
-            {isAuth ? <Button variant="grey">профиль</Button> : <Button variant="grey" onClick={() => setIsModal(true)}>войти</Button>}
+            {isAuth ? <Link href="/profile"><Button variant="grey">профиль</Button></Link> : <Button variant="grey" onClick={() => setIsModal(true)}>войти</Button>}
           </div>
         </nav>
       </div>
