@@ -1,8 +1,21 @@
 import Link from "next/link";
 import Button from "../UI/Button";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserInfoReducer } from "@/redux/slices/userSlice";
+import LoginModal from "../UI/LoginModal/LoginModal";
 
 const Header = () => {
-  return (
+  const dispatch = useDispatch();
+  const isAuth = useSelector(state => state.user.isAuth);
+  const user = useSelector(state => state.user.user);
+  useEffect(() => {
+    dispatch(fetchUserInfoReducer());
+  }, [])
+
+  const [isModal, setIsModal] = useState(false);
+  return (<>
+    {isModal && <LoginModal close={() => setIsModal(false)}/>}
     <header className="py-6 drop-shadow-md bg-white">
       <div className="container mx-auto md">
         <nav className="flex items-center justify-between">
@@ -27,13 +40,14 @@ const Header = () => {
             </Link>
           </nav>
 
-          <div className="flex gap-x-5">
-            <Button variant="grey">войти</Button>
+          <div className="flex gap-x-5 items-center">
             <Link href="/cart"><Button style="px-7">корзина</Button></Link>
+            {isAuth ? <Button variant="grey">профиль</Button> : <Button variant="grey" onClick={() => setIsModal(true)}>войти</Button>}
           </div>
         </nav>
       </div>
     </header>
+    </>
   );
 };
 export default Header;

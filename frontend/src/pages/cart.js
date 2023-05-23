@@ -6,6 +6,7 @@ import CartItem from "@/components/UI/CartItem/CartItem";
 import OrderForm from "@/components/UI/OrderForm/OrderForm";
 import { axiosQuery } from "@/helpers/queries/axiosInstance";
 import { getCartContentReducer } from "@/redux/slices/cartSlice";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,8 +17,7 @@ const CartPage = () => {
 
   const cost = useSelector(state => state.cart.cost);
 
-  console.log(items);
-
+  const isAuth = useSelector(state => state.user.isAuth)
   useEffect(() => {
     dispatch(getCartContentReducer())
   }, [])
@@ -56,10 +56,12 @@ const CartPage = () => {
             <p className="text-3xl mt-2.5">
               Итого <b>{cost} Р</b>
             </p>
-            <Button className={"py-3 w-full mt-3.5"}>
-              Войти с помощью Telegram
-            </Button>
-            <p className="text-xl text-center mt-2.5">или</p>
+            {!isAuth && <> <Link href="https://t.me/tpl_food_bot" target="_blank">
+              <Button className={"py-3 w-full mt-3.5"}>
+                Войти с помощью Telegram
+              </Button>
+            </Link>
+            <p className="text-xl text-center mt-2.5">или</p></>}
 
             <OrderForm/>
           </div>
