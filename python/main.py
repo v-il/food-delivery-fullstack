@@ -11,6 +11,7 @@ user_state = {}
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    # Добавить проверку на авторизацию, чтобы не просило авторизоваться всегда?
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     auth_button = telebot.types.KeyboardButton('Авторизоваться')
     catalog_button = telebot.types.KeyboardButton('Каталог')
@@ -48,6 +49,9 @@ def backb(message):
     elif user_state.get(message.chat.id) == 'Селектор':
         user_state[message.chat.id] = 'Каталог'
         products(message)
+    elif user_state.get[message.chat.id] = 'Корзина':
+        user_state[message.chat.id] = None
+        start(message)
 
 
 @bot.message_handler(func=lambda message: message.text == 'Каталог')
@@ -76,16 +80,21 @@ def products(message):
 @bot.message_handler(func=lambda message: message.text == 'Корзина')
 def cart(message):
     # Инициализировать корзину только после выбора товара
-    bot.send_message(message.chat.id, 'Вы выбрали опцию "Корзина"')
+    # bot.send_message(message.chat.id, 'Вы выбрали опцию "Корзина"')
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    # check_cart = telebot.types.KeyboardButton('Содержимое корзины')
+    # back_button = telebot.types.KeyboardButton('Назад')
+    # markup.add(check_cart, back_button)
+    # user_state[message.chat.id] = 'Корзина'
     tg_id = message.from_user.id
     payload = {"tg_uid": tg_id}
     headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
     response = requests.post(f'http://backend:5000/carts', data=payload, headers=headers)
-    bot.send_message(message.chat.id, f'STATUSCODE: {response.status_code}')
     if response.status_code == 201:
         bot.send_message(message.chat.id, 'Корзина успешно создана.')
     else:
         bot.send_message(message.chat.id, 'Произошла ошибка при добавлении корзины в базу данных')
+    # Добавить функцию заказа и фукнцию приема парс строки с товаром
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
@@ -103,6 +112,13 @@ def selector(message):
             bot.send_message(message.chat.id, f'Раздел {message.text} в разработке.')
             user_state[message.chat.id] = None
             start(message)
+    elif user_state.get(message.chat.id) == 'Селектор':
+        msg = message.text
+        bot.send_message(message.chat.id, f'MSG: {msg}')
+        # Распарсить три строки и связять с корзиной
+        # cart(message)
+        bot.send_message(message.chat.id, f'Товар добавлен в корзину') # еще нет
+        user_state.get(message.chat.id) == None
     else:
         user_state[message.chat.id] = None
         start(message)
