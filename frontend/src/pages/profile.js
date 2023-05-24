@@ -1,16 +1,19 @@
 import DocHead from "@/components/DocHead";
 import Header from "@/components/Header/Header";
 import Input from "@/components/Input/Input";
+import OrdersList from "@/components/OrdersList/OrdersList";
 import Button from "@/components/UI/Button";
+import { getMyOrdersReducer } from "@/redux/slices/cartSlice";
 import {
   fetchUserInfoReducer,
   updateUserInfoReducer,
 } from "@/redux/slices/userSlice";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user.user);
+  const orders = useSelector((state) => state.cart.orders);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const dispatch = useDispatch();
   const [updateData, setUpdateData] = useState({
@@ -29,6 +32,10 @@ const ProfilePage = () => {
     });
   }, [user, setUpdateData]);
 
+  useEffect(() => {
+    dispatch(getMyOrdersReducer({id: user.id}))
+  }, [dispatch, user])
+
   const saveHandler = async () => {
     await dispatch(
       updateUserInfoReducer({
@@ -45,10 +52,10 @@ const ProfilePage = () => {
     <>
       <DocHead title="Профиль" />
       <Header />
-      <div className="container mx-auto max-w-8xl mt-8">
+      <div className="container mx-auto w-8xl mt-8">
         <h1 className="text-4xl font-bold">Ваш профиль</h1>
-        <div className="flex flex-col">
-          <div className="p-5 flex flex-col rounded-xl border-2 mt-3 max-w-[50%]">
+        <div className="flex w-full gap-3 max-h-[518px]">
+          <div className="p-5 flex flex-col rounded-xl border-2 mt-3 w-full">
             <b>Изменение данных</b>
 
             <div className="mt-5">
@@ -120,6 +127,8 @@ const ProfilePage = () => {
               Сохранить
             </Button>
           </div>
+
+          <OrdersList orders={orders}/>
         </div>
       </div>
     </>

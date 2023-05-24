@@ -32,6 +32,15 @@ export class CartsService {
 
     }
 
+    async getById(id: number) {
+        const cart = await this.cartRepository.findOne({where: {id}, include: {model: Item}});
+        if (cart) {
+            return cart.dataValues
+        }
+
+        throw new NotFoundException();
+    }
+
     async get(string_id: string) {
         const cart = await this.cartRepository.findOne({ where: { string_id }, include: {model: Item} });
 

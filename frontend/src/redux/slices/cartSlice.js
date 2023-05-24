@@ -5,6 +5,8 @@ const initialState = {
     items: [],
     disabledAddToCartButton: false,
     cost: 0,
+    link: '',
+    orders: []
 }
 
 export const addToCartReducer = createAsyncThunk(
@@ -30,6 +32,19 @@ export const getCartContentReducer = createAsyncThunk(
         const response = await axiosQuery.get('/carts')
 
         if (response.status === 200) {
+            return response.data
+        } else {
+            rejectWithValue(response.message);
+        }
+    }
+)
+
+export const getMyOrdersReducer = createAsyncThunk(
+    'order/getMy',
+    async function({id}, {rejectWithValue}) {
+        const response = await axiosQuery.get(`/orders/${id}`);
+
+        if (response.status === 201 | 200) {
             return response.data
         } else {
             rejectWithValue(response.message);
@@ -76,8 +91,13 @@ export const cartSlice = createSlice({
         })
 
         .addCase(sendOrderReducer.fulfilled, (state, action) => {
-            console.log(action.payload);
+            state.link = action.payload.link;
             localStorage.removeItem('cart');
+            window.location.replace(`/pay?code=${action.payload.link}`);
+        })
+
+        .addCase(getMyOrdersReducer.fulfilled, (state, action) => {
+            state.orders = action.payload
         })
     }
 })

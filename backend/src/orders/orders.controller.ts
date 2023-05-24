@@ -30,4 +30,15 @@ export class OrdersController {
   getAddress(@Body() address: FindAddressDto) {
     return this.orderService.getAddress(address.address);
   }
+
+  @Get('/getcost/:link')
+  async getCost(@Param('link') link: string) {
+    const cost = await this.orderService.getCost(link);
+    return {cost};
+  }
+
+  @Get('/pay/:code')
+  pay(@Param('code') code: string) {
+    return this.orderService.pay(code);
+  }
 }

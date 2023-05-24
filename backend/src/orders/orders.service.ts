@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Order } from './orders.model';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -34,7 +34,7 @@ export class OrdersService {
     itemsInCart.map((item) => (total += item.total_price));
 
     if (promocode_id && promocode_id.dataValues.minTotal < total) {
-      total -= total * (promocode_id.dataValues.discount / 100);
+      total -= Math.floor(total * (promocode_id.dataValues.discount / 100));
     }
 
     await Cart.update({ done: true }, { where: { id: cart.dataValues.id } });
@@ -86,5 +86,23 @@ export class OrdersService {
     } else {
       throw new NotFoundException();
     }
+  }
+
+  async getCost(link: string) {
+    const order = await this.orderRepository.findOne({where: {payment_link: link}});
+    if (order && !order.dataValues.paid) {
+      return order.dataValues.total;
+    }
+
+    throw new NotFoundException();
+  }
+
+  async pay(code: string) {
+    const order = await this.orderRepository.update({paid: true}, {where: {payment_link: code}});
+    if (order) {
+      return true;
+    }
+
+    throw new BadRequestException('Failed');
   }
 }
