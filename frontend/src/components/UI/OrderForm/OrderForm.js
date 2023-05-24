@@ -3,11 +3,13 @@ import TextArea from "@/components/TextArea/TextArea";
 import Button from "@/components/UI/Button";
 import { axiosQuery } from "@/helpers/queries/axiosInstance";
 import { getCartContentReducer, sendOrderReducer } from "@/redux/slices/cartSlice";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const OrderForm = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [values, setValues] = useState({
     name: "",
@@ -35,7 +37,7 @@ const OrderForm = () => {
         cart_id: localStorage.getItem("cart"),
         promocode: values.promocode
       })
-    );
+    );    
   };
 
   useEffect(() => {

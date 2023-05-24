@@ -44,6 +44,11 @@ export class CartsController {
         return this.cartService.get(req.cookies["cart"]);
     }
 
+    @Get('/getbyid/:id')
+    getById(@Param('id') id: number) {
+        return this.cartService.getById(id);
+    }
+
     @ApiOperation({ summary: 'Telegram only Получение корзины' })
     @ApiResponse({ status: 200, type: Cart })
     @ApiNotFoundResponse({ description: 'Корзина не найдена' })
