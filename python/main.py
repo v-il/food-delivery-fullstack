@@ -21,7 +21,11 @@ def start(message):
 @bot.message_handler(func=lambda message: message.text == 'Авторизоваться')
 def auth(message):
     tg_id = message.from_user.id
-    bot.send_message(message.chat.id, f'TGID: {tg_id}')
+    tg_name = message.from_user.username
+    # bot.send_message(message.chat.id, f'TGID: {tg_id}')
+    payload = {'tg_id': tg_id, 'tg_name': tg_name}
+    headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
+    r = requests.post('http://backend:5000/user/auth', data=payload, headers=headers)
     url = f'http://backend:5000/user/tg-auth/{tg_id}'
     try:
         response = requests.get(url)
