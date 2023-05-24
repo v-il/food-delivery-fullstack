@@ -22,7 +22,6 @@ def start(message):
 def auth(message):
     tg_id = message.from_user.id
     tg_name = message.from_user.username
-    # bot.send_message(message.chat.id, f'TGID: {tg_id}')
     payload = {'tg_id': tg_id, 'tg_name': tg_name}
     headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
     r = requests.post('http://backend:5000/user/auth', data=payload, headers=headers)
@@ -35,9 +34,18 @@ def auth(message):
             bot.send_message(message.chat.id, f'Для авторизации перейдите по ссылке: {link}')
         else:
             bot.send_message(message.chat.id, 'Произошла ошибка при получении ссылки на авторизацию')
-            bot.send_message(message.chat.id, f'STATUSCODE: {response.status_code}')
     except requests.RequestException:
         bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
+
+
+@bot.message_handler(func=lambda message: message.text == 'Назад')
+def backb(message):
+    if user_state.get(message.chat.id) == 'Каталог':
+        user_state[message.chat.id] = None
+        start(message)
+    elif user_state.get(message.chat.id) == 'Селектор':
+        user_state[message.chat.id] = 'Каталог'
+        products(message)
 
 
 @bot.message_handler(func=lambda message: message.text == 'Каталог')
@@ -52,9 +60,9 @@ def products(message):
                 name = product.get('name')
                 button = telebot.types.KeyboardButton(name)
                 markup.add(button)
-            #back_button = telebot.types.KeyboardButton('Назад')
-            #markup.add(back_button)
             user_state[message.chat.id] = 'Каталог'
+            back_button = telebot.types.KeyboardButton('Назад')
+            markup.add(back_button)
             bot.send_message(message.chat.id, 'Выберите категорию:', reply_markup=markup)
         else:
             bot.send_message(message.chat.id, 'Произошла ошибка при получении списка продуктов')
@@ -75,7 +83,7 @@ def selector(message):
         elif message.text == 'drinks':
             select_category(message)
         else:
-            # bot.send_message(message.chat.id, 'ITEM NOT FOUND')
+            bot.send_message(message.chat.id, f'Раздел {message.text} в разработке.')
             user_state[message.chat.id] = None
             start(message)
     else:
@@ -105,6 +113,9 @@ def select_category(message):
                 else:
                     button = telebot.types.KeyboardButton(name)
                     markup.add(button)
+            user_state[message.chat.id] = 'Селектор'
+            back_button = telebot.types.KeyboardButton('Назад')
+            markup.add(back_button)
             bot.send_message(message.chat.id, 'Выберите товар:', reply_markup=markup)
         else:
             bot.send_message(message.chat.id, 'Произошла ошибка при получении продуктов')
