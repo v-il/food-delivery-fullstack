@@ -19,12 +19,17 @@ export class CartsService {
     }
 
     async createTg(tg_uid: number) {
-        const cart = await this.cartRepository.create({
-            string_id: randomstring.generate(12),
-            tg_uid
-        })
+        const existedCart = await this.cartRepository.findOne({where: {tg_uid, done: false}});
+        if (!existedCart.dataValues) {
+            const cart = await this.cartRepository.create({
+                string_id: randomstring.generate(12),
+                tg_uid
+            })
+            return cart;
+        }
 
-        return cart;
+        return existedCart.dataValues;
+
     }
 
     async get(string_id: string) {
@@ -38,7 +43,7 @@ export class CartsService {
     }
 
     async getTg(tg_uid: number) {
-        const cart = await this.cartRepository.findOne({where: [{tg_uid: tg_uid, done: false    }]});
+        const cart = await this.cartRepository.findOne({where: [{tg_uid: tg_uid, done: false}], include: {model: Item}});
         
         if (!cart) {
             throw new NotFoundException();

@@ -28,7 +28,8 @@ export class CartsController {
             }
         }
         if (dto && dto.tg_uid) {
-            return this.cartService.createTg(dto.tg_uid)
+            const cart = await this.cartService.createTg(dto.tg_uid)
+            res.json(cart);
         } 
         const cart = await this.cartService.create();
         res.cookie('cart', cart.string_id);
@@ -47,7 +48,8 @@ export class CartsController {
     @ApiResponse({ status: 200, type: Cart })
     @ApiNotFoundResponse({ description: 'Корзина не найдена' })
     @Get('/tg/:tg_uid')
-    getTg(@Param('tg_uid') tg_uid: number, @Res() res: Response) {
-        return this.cartService.getTg(tg_uid);
+    async getTg(@Param('tg_uid') tg_uid: number, @Res() res) {
+        const cart = await this.cartService.getTg(tg_uid)
+        res.json(cart);
     }
 }
