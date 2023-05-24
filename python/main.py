@@ -71,8 +71,12 @@ def selector(message):
         elif message.text == 'drinks':
             select_category(message)
         else:
-            bot.send_message(message.chat.id, 'ITEM NOT FOUND')
+            # bot.send_message(message.chat.id, 'ITEM NOT FOUND')
+            user_state[message.chat.id] = None
+            start(message)
     else:
+        user_state[message.chat.id] = None
+        start(message)
         pass
 
 def select_category(message):
@@ -82,6 +86,7 @@ def select_category(message):
     try:
         response = requests.get(url)
         if response.status_code == 200:
+            size_map = {'small': 'маленький', 'medium': 'средний', 'big': 'большой', '0.5': '0.5 л', '2': '2 л'}
             data = response.json()
             markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
             for product in data['items']:
@@ -90,7 +95,7 @@ def select_category(message):
                     for sizes in product["sizes"]:
                         size = sizes.get('type')
                         price = sizes.get('price')
-                        button_text = f'{name}\nРазмер: {size}\nЦена: {price}'
+                        button_text = f'{name}\nРазмер: {size_map.get(size)}\nЦена: {price}'
                         button = telebot.types.KeyboardButton(button_text)
                         markup.add(button)
                 else:
