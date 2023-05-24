@@ -1,5 +1,6 @@
 import telebot
 import requests
+import json
 
 bot = telebot.TeleBot('6092271983:AAGxi1aqDoqPkgNRLu5SugSF4WeeN42ZGas')
 user_state = {}
@@ -43,9 +44,9 @@ def products(message):
                 name = product.get('name')
                 button = telebot.types.KeyboardButton(name)
                 markup.add(button)
-            back_button = telebot.types.KeyboardButton('Назад')
-            markup.add(back_button)
-            user_state[message.chat.id] = 'Каталог'
+            #back_button = telebot.types.KeyboardButton('Назад')
+            #markup.add(back_button)
+            #user_state[message.chat.id] = 'Каталог'
             bot.send_message(message.chat.id, 'Выберите категорию:', reply_markup=markup)
         else:
             bot.send_message(message.chat.id, 'Произошла ошибка при получении списка продуктов')
@@ -53,42 +54,36 @@ def products(message):
     except requests.RequestException:
         bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
 
-@bot.message_handler(func=lambda message: True, content_types=['text'])
-def handle_message(message):
-    if message.text == 'Назад':
-        user_state[message.chat.id] = None
-        start(message)
-    elif user_state.get(message.chat.id) == 'Каталог':
-        select_category(message)
-
+@bot.message_handler(func=lambda message: message.text =='pizza')
 def select_category(message):
     category = message.text
     url = f'http://backend:5000/categories/items/{category}'
+    bot.send_message(message.chat.id, f'{url}')
 
     try:
         response = requests.get(url)
         if response.status_code == 200:
-            products = response.json()
+            data = response.json()
             markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-            for product in products:
+            for product in data['items']:
                 name = product.get('name')
                 if product.get('different_sizes') == True:
-                    size = product.get('type')
-                    price = product.get('price')
-                    button_text = f'{name}\nРазмер: {size}\nЦена: {price}'
-                    button = telebot.types.KeyboardButton(button_text)
+                    for sizes in product["sizes"]:
+                        size = sizes.get('type')
+                        price = sizes.get('price')
+                        button_text = f'{name}\nРазмер: {size}\nЦена: {price}'
+                        button = telebot.types.KeyboardButton(button_text)
+                        markup.add(button)
                 else:
                     button = telebot.types.KeyboardButton(name)
-                markup.add(button)
-            back_button = telebot.types.KeyboardButton('Назад')
-            markup.add(back_button)
-            user_state[message.chat.id] = 'products'
+                    markup.add(button)
             bot.send_message(message.chat.id, 'Выберите товар:', reply_markup=markup)
         else:
             bot.send_message(message.chat.id, 'Произошла ошибка при получении продуктов')
 
     except requests.RequestException:
         bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
+
 
 @bot.message_handler(func=lambda message: message.text == 'Заказы')
 def orders(message):
