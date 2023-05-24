@@ -20,7 +20,7 @@ export class CartsService {
 
     async createTg(tg_uid: number) {
         const existedCart = await this.cartRepository.findOne({where: {tg_uid, done: false}});
-        if (!existedCart.dataValues) {
+        if (!existedCart) {
             const cart = await this.cartRepository.create({
                 string_id: randomstring.generate(12),
                 tg_uid

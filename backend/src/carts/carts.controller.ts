@@ -29,7 +29,7 @@ export class CartsController {
         }
         if (dto && dto.tg_uid) {
             const cart = await this.cartService.createTg(dto.tg_uid)
-            res.json(cart);
+            return res.json(cart);
         } 
         const cart = await this.cartService.create();
         res.cookie('cart', cart.string_id);
