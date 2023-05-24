@@ -1,6 +1,8 @@
 import telebot
 import requests
 import json
+import random
+import string
 
 
 bot = telebot.TeleBot('6092271983:AAGxi1aqDoqPkgNRLu5SugSF4WeeN42ZGas')
@@ -71,6 +73,21 @@ def products(message):
         bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
 
 
+@bot.message_handler(func=lambda message: message.text == 'Корзина')
+def cart(message):
+    # Инициализировать корзину только после выбора товара
+    bot.send_message(message.chat.id, 'Вы выбрали опцию "Корзина"')
+    tg_id = message.from_user.id
+    payload = {"tg_uid": tg_id}
+    headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
+    response = requests.post(f'http://backend:5000/carts', data=payload, headers=headers)
+    bot.send_message(message.chat.id, f'STATUSCODE: {response.status_code}')
+    if response.status_code == 201:
+        bot.send_message(message.chat.id, 'Корзина успешно создана.')
+    else:
+        bot.send_message(message.chat.id, 'Произошла ошибка при добавлении корзины в базу данных')
+
+
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def selector(message):
     if user_state.get(message.chat.id) == 'Каталог':
@@ -127,11 +144,6 @@ def select_category(message):
 @bot.message_handler(func=lambda message: message.text == 'Заказы')
 def orders(message):
     bot.send_message(message.chat.id, 'Вы выбрали опцию "Заказы"')
-
-
-@bot.message_handler(func=lambda message: message.text == 'Корзина')
-def cart(message):
-    bot.send_message(message.chat.id, 'Вы выбрали опцию "Корзина"')
 
 
 bot.polling()
