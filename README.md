@@ -33,4 +33,4 @@ http://localhost:5000/docs
 Для заполнения таблицы ролей и категорий перейти по следующим роутам
 http://localhost:5000/roles/init  
 http://localhost:5000/categories/init  
-http://localhost:5000/item/init  
+http://localhost:5000/items/init  
