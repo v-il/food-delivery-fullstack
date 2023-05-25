@@ -1,44 +1,49 @@
 import telebot
 import requests
 import json
-import random
-import string
-
 
 bot = telebot.TeleBot('6092271983:AAGxi1aqDoqPkgNRLu5SugSF4WeeN42ZGas')
 user_state = {}
+auth_state = {}
 
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    # Добавить проверку на авторизацию, чтобы не просило авторизоваться всегда?
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     auth_button = telebot.types.KeyboardButton('Авторизоваться')
     catalog_button = telebot.types.KeyboardButton('Каталог')
     orders_button = telebot.types.KeyboardButton('Заказы')
     cart_button = telebot.types.KeyboardButton('Корзина')
     markup.add(auth_button, catalog_button, orders_button, cart_button)
-    bot.send_message(message.chat.id, 'Привет! Нажми на кнопку "Авторизоваться", чтобы авторизоваться на сайте.', reply_markup=markup)
-
+    if auth_state.get(message.chat.id) == '1':
+        bot.send_message(message.chat.id, 'Ты вернулся в начало.', reply_markup=markup)
+    else:
+        bot.send_message(message.chat.id, 'Привет! Нажми на кнопку "Авторизоваться", чтобы авторизоваться на сайте.', reply_markup=markup)
+    
 
 @bot.message_handler(func=lambda message: message.text == 'Авторизоваться')
 def auth(message):
-    tg_id = message.from_user.id
-    tg_name = message.from_user.username
-    payload = {'tg_id': tg_id, 'tg_name': tg_name}
-    headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
-    r = requests.post('http://backend:5000/user/auth', data=payload, headers=headers)
-    url = f'http://backend:5000/user/tg-auth/{tg_id}'
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            link = data.get('link')
-            bot.send_message(message.chat.id, f'Для авторизации перейдите по ссылке: {link}')
-        else:
-            bot.send_message(message.chat.id, 'Произошла ошибка при получении ссылки на авторизацию')
-    except requests.RequestException:
-        bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
+    if auth_state.get(message.chat.id) == '1':
+        bot.send_message(message.chat.id, 'Вы уже авторизованы.')
+    else:
+        tg_id = message.from_user.id
+        tg_name = message.from_user.username
+        payload = {'tg_id': tg_id, 'tg_name': tg_name}
+        headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
+        r = requests.post('http://backend:5000/user/auth', data=payload, headers=headers)
+        url = f'http://backend:5000/user/tg-auth/{tg_id}'
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                auth_state[message.from_user.id] = '1'
+                data = response.json()
+                link = data.get('link')
+                bot.send_message(message.chat.id, f'Для авторизации перейдите по ссылке: {link}')
+            else:
+                auth_state[message.from_user.id] = '0'
+                bot.send_message(message.chat.id, 'Произошла ошибка при получении ссылки на авторизацию')
+        except requests.RequestException:
+            bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
 
 
 @bot.message_handler(func=lambda message: message.text == 'Назад')
@@ -49,7 +54,7 @@ def backb(message):
     elif user_state.get(message.chat.id) == 'Селектор':
         user_state[message.chat.id] = 'Каталог'
         products(message)
-    elif user_state.get[message.chat.id] = 'Корзина':
+    elif user_state.get[message.chat.id] == 'Корзина':
         user_state[message.chat.id] = None
         start(message)
 
@@ -108,17 +113,20 @@ def selector(message):
             select_category(message)
         elif message.text == 'drinks':
             select_category(message)
+        elif message.text == 'combo':
+            select_category(message)
         else:
             bot.send_message(message.chat.id, f'Раздел {message.text} в разработке.')
             user_state[message.chat.id] = None
             start(message)
     elif user_state.get(message.chat.id) == 'Селектор':
         msg = message.text
-        bot.send_message(message.chat.id, f'MSG: {msg}')
+        bot.send_message(message.chat.id, f'{msg}')
         # Распарсить три строки и связять с корзиной
         # cart(message)
         bot.send_message(message.chat.id, f'Товар добавлен в корзину') # еще нет
         user_state.get(message.chat.id) == None
+        start(message)
     else:
         user_state[message.chat.id] = None
         start(message)
