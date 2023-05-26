@@ -13,6 +13,9 @@ export class CartItemsController {
   @Post('/add')
   @ApiResponse({status: 200, type: Boolean})
   addItemToCart(@Body() dto: CreateCartItemDto) {
+    console.log('\n\n\n\n\n\n');
+    console.log(dto);
+    console.log('\n\n\n\n\n\n');
     return this.cartItemService.addToCart(dto.item_id, dto.cart_id, dto.size);
   }
 

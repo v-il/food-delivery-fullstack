@@ -15,9 +15,8 @@ export class OrdersService {
 
   async addOrder(dto: CreateOrderDto) {
     if (dto.tg_id) {
-      const user = (await User.findOne({ where: { tg_id: dto.tg_id } }))
-        .dataValues;
-      dto.user_id = user.id;
+      const user = (await User.findOne({ where: { tg_id: dto.tg_id } }));
+      dto.user_id = user?.dataValues?.id;
     }
 
     const promocode_id = dto.promocode
@@ -26,7 +25,7 @@ export class OrdersService {
 
     const cart = await Cart.findOne({ where: { string_id: dto.cart_id } });
     const itemsInCart = await CartItem.findAll({
-      where: { cart_id: cart.dataValues.id },
+      where: { cart_id: cart?.dataValues?.id },
     });
 
     let total = 0;
