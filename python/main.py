@@ -13,6 +13,7 @@ cart_state = {}
 cart_id = ''
 item_id_storage = 0
 
+
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -34,8 +35,8 @@ def auth(message):
         tg_name = message.from_user.username
         payload = {'tg_id': tg_id, 'tg_name': tg_name}
         headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
-        r = requests.post('http://45.12.73.234:5000/user/auth', data=payload, headers=headers)
-        url = f'http://45.12.73.234:5000/user/tg-auth/{tg_id}'
+        r = requests.post('http://backend:5000/user/auth', data=payload, headers=headers)
+        url = f'http://backend:5000/user/tg-auth/{tg_id}'
         try:
             response = requests.get(url)
             if response.status_code == 200:
@@ -67,7 +68,7 @@ def backb(message):
 
 @bot.message_handler(func=lambda message: message.text == 'Каталог')
 def products(message):
-    url = 'http://45.12.73.234:5000/categories'
+    url = 'http://backend:5000/categories'
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -92,7 +93,7 @@ def cart_info(message):
     tg_id = message.from_user.id
     headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    response = requests.get(f'http://45.12.73.234:5000/carts/tg/{tg_id}', headers=headers)
+    response = requests.get(f'http://backend:5000/carts/tg/{tg_id}', headers=headers)
     cart_message = 'В вашей корзине:\n'
     if response.status_code == 200:
         items = response.json().get('items')
@@ -110,6 +111,7 @@ def cart_info(message):
         bot.send_message(message.chat.id, cart_message, reply_markup=markup)
     else:
         bot.send_message(message.chat.id, 'Произошла ошибка при получении содержимого корзины')
+
 
 def create_inline_keyboard(items):
     keyboard = types.InlineKeyboardMarkup()
@@ -136,7 +138,7 @@ def remove_item(message, item_id):
     headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     payload = {"cart_item_id": item_id}
-    response = requests.post(f'http://45.12.73.234:5000/cart-items/decrement', data=payload, headers=headers)
+    response = requests.post(f'http://backend:5000/cart-items/decrement', data=payload, headers=headers)
     user_state[message.chat.id] = 'Корзина'
     back_button = telebot.types.KeyboardButton('Назад')
     markup.add(back_button)
@@ -151,7 +153,7 @@ def cart_remove(message):
     tg_id = message.from_user.id
     headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    response = requests.get(f'http://45.12.73.234:5000/carts/tg/{tg_id}', headers=headers)
+    response = requests.get(f'http://backend:5000/carts/tg/{tg_id}', headers=headers)
     cart_message = 'Выберете какой товар удалить:\n'
     if response.status_code == 200:
         items = response.json().get('items')
@@ -165,7 +167,7 @@ def cart_init(message):
         tg_id = message.from_user.id
         payload = {"tg_uid": tg_id}
         headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
-        response = requests.post(f'http://45.12.73.234:5000/carts', data=payload, headers=headers)
+        response = requests.post(f'http://backend:5000/carts', data=payload, headers=headers)
         if response.status_code == 201:
             global cart_id
             cart_id = response.json().get('string_id')
@@ -182,12 +184,13 @@ def handle_cart(message):
         cart_init(message)
         cart_info(message)
 
+
 @bot.message_handler(func=lambda message: message.text == 'Заказы')
 def orders(message):
     tg_id = message.from_user.id
     headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    response = requests.get(f'http://45.12.73.234:5000/carts/tg/{tg_id}', headers=headers)
+    response = requests.get(f'http://backend:5000/carts/tg/{tg_id}', headers=headers)
     cart_message = 'В вашей корзине:\n'
     total_count = 0
     if response.status_code == 200:
@@ -237,10 +240,10 @@ def process_comment(message, tg_id, name, address, delivery_time):
         'comment': str(comment),
         'cart_id': str(cart_id)
     }
-    response = requests.post('http://45.12.73.234:5000/orders', json=payload, headers=headers)
+    response = requests.post('http://backend:5000/orders', json=payload, headers=headers)
     if response.status_code == 201:
         link = response.json().get('link')
-        payment_link = f"http://45.12.73.234:5000/pay?code={link}"
+        payment_link = f"http://backend:5000/pay?code={link}"
         bot.send_message(message.chat.id, f"Ваш заказ оформлен. Оплатить: {payment_link}")
         cart_state[message.from_user.id] = '0'
     else:
@@ -273,7 +276,7 @@ def selector(message):
         msg_size = msg[1].split(':')
         payload = {"cart_id":cart_id, "item_id":int(product_map[f'{msg[0].strip()}:{msg_size[1].strip()}']), "size":msg_size[1].strip()}
         headers = {'API-KEY': 'CUeKOImqICnGsLgy0T0x'}
-        response = requests.post(f'http://45.12.73.234:5000/cart-items/add', data=payload, headers=headers)
+        response = requests.post(f'http://backend:5000/cart-items/add', data=payload, headers=headers)
         bot.send_message(message.chat.id, f'Товар добавлен в корзину.')
         user_state.get(message.chat.id) == None
         # start(message)
@@ -286,7 +289,7 @@ def selector(message):
 
 def select_category(message):
     category = message.text
-    url = f'http://45.12.73.234:5000/categories/items/{category}'
+    url = f'http://backend:5000/categories/items/{category}'
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -317,7 +320,6 @@ def select_category(message):
 
     except requests.RequestException:
         bot.send_message(message.chat.id, 'Произошла ошибка при подключении к серверу')
-
 
 
 bot.polling()
