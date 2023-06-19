@@ -21,12 +21,15 @@ export class CartsController {
             console.log(cartId);
 
             if (cartId) {
-                const cart = await this.cartService.get(cartId);
-                return res.json(cart);
+                const cart = (await Cart.findOne({where: {string_id: cartId}}));
+                if (cart && cart.dataValues !== null ) {
+                    return res.json(cart);
+                }
             }
         }
         if (dto && dto.tg_uid) {
-            return this.cartService.createTg(dto.tg_uid)
+            const cart = await this.cartService.createTg(dto.tg_uid)
+            return res.json(cart);
         } 
         const cart = await this.cartService.create();
         res.cookie('cart', cart.string_id);
@@ -36,16 +39,22 @@ export class CartsController {
     @ApiOperation({ summary: 'Web only Получение корзины' })
     @ApiResponse({ status: 200, type: Cart })
     @ApiNotFoundResponse({ description: 'Корзина не найдена' })
-    @Get('/:string_id')
-    get(@Param('string_id') string_id: string) {
-        return this.cartService.get(string_id);
+    @Get('')
+    get(@Req() req) {
+        return this.cartService.get(req.cookies["cart"]);
+    }
+
+    @Get('/getbyid/:id')
+    getById(@Param('id') id: number) {
+        return this.cartService.getById(id);
     }
 
     @ApiOperation({ summary: 'Telegram only Получение корзины' })
     @ApiResponse({ status: 200, type: Cart })
     @ApiNotFoundResponse({ description: 'Корзина не найдена' })
     @Get('/tg/:tg_uid')
-    getTg(@Param('tg_uid') tg_uid: number, @Res() res: Response) {
-        return this.cartService.getTg(tg_uid);
+    async getTg(@Param('tg_uid') tg_uid: number, @Res() res) {
+        const cart = await this.cartService.getTg(tg_uid)
+        res.json(cart);
     }
 }

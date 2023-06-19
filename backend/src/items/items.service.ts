@@ -49,51 +49,27 @@ export class ItemsService {
                 category_id: 1   
             },
             {
-                name: 'Рогалики с сыром',
-                description: 'Рогалики из нежного теста с чесночным соусом, ветчиной, сыром моцарелла. Сервируются с соусом на выбор',
-                image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/dede7359569c8ad6d5ae1e60890652b5.webp',
-                different_sizes: false,
-                price: 389,
-                category_id: 3   
-            },
-            {
                 name: 'Рогалики с ветчиной',
                 description: 'Рогалики из нежного теста с чесночным соусом, ветчиной, сыром моцарелла. Сервируются с соусом на выбор',
-                image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/68293f61e86760b54c0e84b4be607cfb.webp',
-                different_sizes: false,
-                price: 289,
+                image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/dede7359569c8ad6d5ae1e60890652b5.webp',
+                different_sizes: true,
+                price: null,
                 category_id: 3   
             },
             {
-                name: 'Пончик Ванильный',
-                description: 'Пончик ванильный, украшенный разноцветной посыпкой.',
-                image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/8f44b2dddf8035a9c082524fb725a8bf.webp',
-                different_sizes: false,
-                price: 99,
-                category_id: 4   
-            },
-            {
-                name: 'Пончик Клубничный',
+                name: 'Пончик с глазурью',
                 description: 'Ярко-розовый пончик без начинки, покрытый ароматной клубничной глазурью.',
                 image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/379af5878086d7d31367c1e1fba59cdc.webp',
-                different_sizes: false,
-                price: 99,
-                category_id: 4   
-            },
-            {
-                name: 'Пончик Шоколадный',
-                description: 'Пончик со вкусом шоколада Свежий ароматный донат , покрытый шоколадной глазурью. Классический вкус шоколада подарит вам ощущение уюта и комфорта.',
-                image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/ff046db7621ad083c7f5b71bb752e513.webp',
-                different_sizes: false,
-                price: 99,
+                different_sizes: true,
+                price: null,
                 category_id: 4   
             },
             {
                 name: 'Тирамису',
                 description: 'Легендарный вкус воплощен в нежном торте с сыром Маскарпоне и украшен какао посыпкой.',
                 image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/a5654d3fc03e5b6ba19a73e5a57a0148.webp',
-                different_sizes: false,
-                price: 219,
+                different_sizes: true,
+                price: null,
                 category_id: 4   
             },
 
@@ -113,6 +89,14 @@ export class ItemsService {
                 price: null,
                 category_id: 5
             },
+            {
+                name: 'Комбо из четырех пицц',
+                description: '4 пиццы',
+                image_url: 'https://cdn.papajohns.ru//images/catalog/thumbs/full/2baa4bb052e20635517cb0633fd09a0a.webp',
+                different_sizes: true,
+                price: null,
+                category_id: 6
+            }
         ])
 
         await ItemsExtrafields.bulkCreate([
@@ -203,35 +187,86 @@ export class ItemsService {
                 price: 879,
                 item_id: 4
             },
+            {
+                type: 'small',
+                tg_frontend_type: 'маленькие',
+                in_stock: true,
+                price: 289,
+                item_id: 5
+            },
+            {
+                type: 'big',
+                tg_frontend_type: 'большие',
+                in_stock: true,
+                price: 369,
+                item_id: 5
+            },
 
             {
-                type: '0.5',
-                tg_frontend_type: '2 л',
+                type: 'small',
+                tg_frontend_type: 'маленький',
                 in_stock: true,
                 price: 99,
-                item_id: 11
+                item_id: 6
+            },
+            {
+                type: 'big',
+                tg_frontend_type: 'большой',
+                in_stock: true,
+                price: 159,
+                item_id: 6
+            },
+
+            
+            {
+                type: 'small',
+                tg_frontend_type: 'порция',
+                in_stock: true,
+                price: 230,
+                item_id: 7
+            },
+            {
+                type: 'big',
+                tg_frontend_type: 'торт',
+                in_stock: true,
+                price: 1260,
+                item_id: 7
+            },
+            {
+                type: '0.5',
+                tg_frontend_type: '0.5 л',
+                in_stock: true,
+                price: 99,
+                item_id: 8
             },
             {
                 type: '2',
                 tg_frontend_type: '2 л',
                 in_stock: true,
                 price: 199,
-                item_id: 11
+                item_id: 9
             },
 
             {
                 type: '0.5',
-                tg_frontend_type: '2 л',
+                tg_frontend_type: '0.5 л',
                 in_stock: true,
                 price: 99,
-                item_id: 12
+                item_id: 9
             },
             {
-                type: '2',
-                tg_frontend_type: '2 л',
+                type: 'small',
+                tg_frontend_type: 'маленькие',
                 in_stock: true,
-                price: 199,
-                item_id: 12
+                price: 1290,
+                item_id: 10
+            },
+            {
+                type: 'big',
+                tg_frontend_type: 'большие',
+                in_stock: true,
+                price: 2650,
+                item_id: 10
             },
         ])
 

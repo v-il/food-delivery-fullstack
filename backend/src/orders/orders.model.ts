@@ -23,6 +23,7 @@ interface OrderItemCreationAttributes {
   payment_link: string;
   paid?: boolean;
   cart_id: number;
+  total: number;
 }
 
 @Table({ tableName: 'orders' })
@@ -92,6 +93,12 @@ export class Order extends Model<Order, OrderItemCreationAttributes> {
     type: DataType.STRING,
   })
   comment: string;
+
+  @Column({
+    type: DataType.INTEGER,
+  })
+  total: number;
+
 
   @BelongsTo(() => Promocode)
   promocode: Promocode;

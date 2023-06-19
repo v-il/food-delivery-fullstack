@@ -2,7 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateOrderDto {
   @ApiProperty()
-  readonly user_id?: number;
+  user_id?: number;
+  @ApiProperty()
+  readonly tg_id?: number;
   @ApiProperty()
   readonly done?: boolean;
   @ApiProperty()
@@ -14,11 +16,11 @@ export class CreateOrderDto {
   @ApiProperty()
   readonly comment?: string;
   @ApiProperty()
-  readonly promocode_id?: number;
+  promocode?: string;
   @ApiProperty()
   readonly payment_link: string;
   @ApiProperty()
   readonly paid?: boolean;
   @ApiProperty()
-  readonly cart_id: number;
+  cart_id: string;
 }
